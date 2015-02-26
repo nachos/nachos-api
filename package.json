@@ -1,0 +1,23 @@
+{
+  "name": "nachos-api",
+  "version": "0.0.0",
+  "description": "The API to interact with nachos",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nachos/nachos-api"
+  },
+  "keywords": [
+    "nachos",
+    "api"
+  ],
+  "author": "Nachos team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nachos/nachos-api/issues"
+  },
+  "homepage": "https://github.com/nachos/nachos-api"
+}
