@@ -19,5 +19,10 @@
   "bugs": {
     "url": "https://github.com/nachos/nachos-api/issues"
   },
-  "homepage": "https://github.com/nachos/nachos-api"
+  "homepage": "https://github.com/nachos/nachos-api",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.9.2",
+    "jshint-stylish": "^1.0.1"
+  }
 }
