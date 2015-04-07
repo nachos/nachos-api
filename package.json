@@ -26,7 +26,6 @@
     "jshint-stylish": "^1.0.1"
   },
   "dependencies": {
-    "nachos-configuration": "git://github.com/nachos/nachos-configuration",
     "socket.io-client": "^1.3.5"
   }
 }
