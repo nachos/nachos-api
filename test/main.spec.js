@@ -14,12 +14,12 @@ describe('nachos-api', function () {
       var nachosApi = require('../lib');
 
       expect(nachosApi).to.not.be.empty;
-      expect(nachosApi.settings).to.be.a.function;
-      expect(nachosApi.system).to.be.an.object;
-      expect(nachosApi.on).to.be.a.function;
-      expect(nachosApi.emit).to.be.a.function;
-      expect(nachosApi.removeListner).to.be.a.function;
-      expect(nachosApi.getServer).to.be.a.function;
+      expect(nachosApi.settings).to.be.a('function');
+      expect(nachosApi.system).to.be.an('object');
+      expect(nachosApi.on).to.be.a('function');
+      expect(nachosApi.emit).to.be.a('function');
+      expect(nachosApi.removeListener).to.be.a('function');
+      expect(nachosApi.server).to.be.an('object');
     });
   });
 
@@ -182,20 +182,20 @@ describe('nachos-api', function () {
     });
   });
 
-  describe('getServer', function () {
+  describe('server', function () {
     describe('with token in config', function () {
       var nachosApi;
-      var connectStub = sinon.stub().returns(Q.resolve());
+      var setTokenStub = sinon.stub();
 
       before(function () {
         var nachosConfigMock = {
-          get: sinon.stub().returns(Q.resolve({token: 'test'})),
-          getSync: sinon.stub().returns({port: '1234'})
+          getSync: sinon.stub().returns({port: '1234', token: 'test'})
         };
 
         var serverApiMock = function () {
           return {
-            connect: connectStub
+            setToken: setTokenStub,
+            connected: sinon.stub().returns(true)
           };
         };
 
@@ -216,28 +216,24 @@ describe('nachos-api', function () {
         mockery.disable();
       });
 
-      it('should get client after connect', function () {
-        return nachosApi.getServer()
-          .then(function (client) {
-            expect(connectStub).to.have.been.calledWith({token: 'test'});
-            expect(client).to.not.be.empty;
-          });
+      it('should be connected', function () {
+        expect(setTokenStub).to.have.been.calledWith('test');
       });
     });
 
     describe('without token in config', function () {
       var nachosApi;
-      var connectStub = sinon.stub().returns(Q.resolve());
+      var setTokenStub = sinon.stub();
 
       before(function () {
         var nachosConfigMock = {
-          get: sinon.stub().returns(Q.resolve({})),
           getSync: sinon.stub().returns({port: '1234'})
         };
 
         var serverApiMock = function () {
           return {
-            connect: connectStub
+            setToken: setTokenStub,
+            connected: sinon.stub().returns(false)
           };
         };
 
@@ -258,12 +254,8 @@ describe('nachos-api', function () {
         mockery.disable();
       });
 
-      it('should get client after connect', function () {
-        return nachosApi.getServer()
-          .then(function (client) {
-            expect(connectStub).to.not.have.been.called;
-            expect(client).to.not.be.empty;
-          });
+      it('should not be connected', function () {
+        expect(setTokenStub).to.have.not.been.called;
       });
     });
   });
