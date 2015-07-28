@@ -19,6 +19,7 @@ describe('nachos-api', function () {
       expect(nachosApi.on).to.be.a.function;
       expect(nachosApi.emit).to.be.a.function;
       expect(nachosApi.removeListner).to.be.a.function;
+      expect(nachosApi.getServer).to.be.a.function;
     });
   });
 
@@ -89,7 +90,7 @@ describe('nachos-api', function () {
     var nachosApi;
     var currentSocketClientMock;
 
-    beforeEach(function () {
+    before(function () {
       var settingsFileMock = function () {
         return {
           save: sinon.stub().returns(Q.resolve()),
@@ -128,7 +129,7 @@ describe('nachos-api', function () {
       nachosApi = require('../lib');
     });
 
-    afterEach(function () {
+    after(function () {
       mockery.deregisterMock('nachos-config');
       mockery.deregisterMock('socket.io-client');
       mockery.deregisterMock('nachos-settings-file');
@@ -178,6 +179,92 @@ describe('nachos-api', function () {
       nachosApi.settings('test').instance('testId').onChange(cb);
 
       expect(currentSocketClientMock.on).to.have.been.calledWith('settings.instance-changed:testId', cb);
+    });
+  });
+
+  describe('getServer', function () {
+    describe('with token in config', function () {
+      var nachosApi;
+      var connectStub = sinon.stub().returns(Q.resolve());
+
+      before(function () {
+        var nachosConfigMock = {
+          get: sinon.stub().returns(Q.resolve({token: 'test'})),
+          getSync: sinon.stub().returns({port: '1234'})
+        };
+
+        var serverApiMock = function () {
+          return {
+            connect: connectStub
+          };
+        };
+
+        mockery.registerMock('nachos-server-api', serverApiMock);
+        mockery.registerMock('nachos-config', nachosConfigMock);
+        mockery.enable({
+          useCleanCache: true,
+          warnOnReplace: false,
+          warnOnUnregistered: false
+        });
+
+        nachosApi = require('../lib');
+      });
+
+      after(function () {
+        mockery.registerMock('nachos-server-api');
+        mockery.deregisterMock('nachos-config');
+        mockery.disable();
+      });
+
+      it('should get client after connect', function () {
+        return nachosApi.getServer()
+          .then(function (client) {
+            expect(connectStub).to.have.been.calledWith({token: 'test'});
+            expect(client).to.not.be.empty;
+          });
+      });
+    });
+
+    describe('without token in config', function () {
+      var nachosApi;
+      var connectStub = sinon.stub().returns(Q.resolve());
+
+      before(function () {
+        var nachosConfigMock = {
+          get: sinon.stub().returns(Q.resolve({})),
+          getSync: sinon.stub().returns({port: '1234'})
+        };
+
+        var serverApiMock = function () {
+          return {
+            connect: connectStub
+          };
+        };
+
+        mockery.registerMock('nachos-server-api', serverApiMock);
+        mockery.registerMock('nachos-config', nachosConfigMock);
+        mockery.enable({
+          useCleanCache: true,
+          warnOnReplace: false,
+          warnOnUnregistered: false
+        });
+
+        nachosApi = require('../lib');
+      });
+
+      after(function () {
+        mockery.registerMock('nachos-server-api');
+        mockery.deregisterMock('nachos-config');
+        mockery.disable();
+      });
+
+      it('should get client after connect', function () {
+        return nachosApi.getServer()
+          .then(function (client) {
+            expect(connectStub).to.not.have.been.called;
+            expect(client).to.not.be.empty;
+          });
+      });
     });
   });
 });
