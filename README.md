@@ -1,4 +1,5 @@
 # nachos-api 
+
 API to interact with nachos core
 
 <table>
@@ -38,17 +39,68 @@ API to interact with nachos core
 
 ## Installation
 ``` bash
-  $ [sudo] npm install nachos-api --save
+$ [sudo] npm install nachos-api --save
 ```
 
-## Examples
+## Usage
+#### Initialization
 ``` js
 var nachosApi = require('nachos-api');
 ```
 
+### Custom events
+#### on(packageName, callback)
+Register custom events
+``` js
+nachosApi.on('your-package', function () {
+  // Code to execute on event custom.your-package
+});
+```
+
+#### emit(packageName, data)
+Emit custom event
+``` js
+nachosApi.emit('your-package', { ... }); // -> emits custom.your-package with the sent data
+```
+
+#### removeListener(packageName, callback)
+Remove event listener
+``` js
+nachosApi.removeListener('your-package', cb);  // cb -> The callback used on registration
+```
+
+### Settings
+#### Example
+``` js
+nachosApi.settings('your-package')
+  .save({ ... })
+  .then(function () {
+    // Saved data successfully
+  });
+```
+See [settings-file](https://github.com/nachos/settings-file) documentation to see list of available functions
+
+### Server
+#### Examples
+``` js
+nachosApi.server.users.me()
+  .then(function (user) {
+    // user -> your user data
+  });
+```
+See [server-api](https://github.com/nachos/server-api) documentation to see list of available functions
+
+### System
+#### open(data)
+``` js
+nachosApi.system.open('path/to/file')
+  .then(function () {
+    // Opened successfully
+  });
+```
 ## Run Tests
 ``` bash
-  $ npm test
+$ npm test
 ```
 
 ## License
