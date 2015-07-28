@@ -16,7 +16,10 @@ module.exports = function (gulp) {
           .pipe(mocha({reporter: 'spec'}))
           .pipe(istanbul.writeReports())
           .pipe(istanbul.enforceThresholds({thresholds: {global: 100}}))
-          .on('end', cb);
+          .on('end', function () {
+            cb();
+            process.exit(0);
+          });
       });
   });
 };
