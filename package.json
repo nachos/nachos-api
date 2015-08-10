@@ -1,6 +1,6 @@
 {
   "name": "nachos-api",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "The API to interact with nachos",
   "main": "lib/index.js",
   "scripts": {
