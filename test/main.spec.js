@@ -94,10 +94,12 @@ describe('nachos-api', function () {
       var settingsFileMock = function () {
         return {
           save: sinon.stub().returns(Q.resolve()),
+          set: sinon.stub().returns(Q.resolve()),
           instance: function (id) {
             return {
               _id: id,
-              save: sinon.stub().returns(Q.resolve())
+              save: sinon.stub().returns(Q.resolve()),
+              set: sinon.stub().returns(Q.resolve())
             };
           }
         };
@@ -149,6 +151,19 @@ describe('nachos-api', function () {
         });
     });
 
+    it('should hook set and emit config.global-changed event', function () {
+      var config = {test: 'test'};
+
+      return nachosApi.settings('test')
+        .set(config)
+        .then(function () {
+          expect(currentSocketClientMock.emit).to.have.been.calledWith('config.global-changed', {
+            app: 'test',
+            config: config
+          });
+        });
+    });
+
     it('should enable onChange registration', function () {
       var cb = function () {
       };
@@ -164,6 +179,20 @@ describe('nachos-api', function () {
       return nachosApi.settings('test')
         .instance('testId')
         .save(config)
+        .then(function () {
+          expect(currentSocketClientMock.emit).to.have.been.calledWith('settings.instance-changed:testId', {
+            instance: 'testId',
+            config: config
+          });
+        });
+    });
+
+    it('should hook instance set and emit config.instance-changed event', function () {
+      var config = {test: 'test'};
+
+      return nachosApi.settings('test')
+        .instance('testId')
+        .set(config)
         .then(function () {
           expect(currentSocketClientMock.emit).to.have.been.calledWith('settings.instance-changed:testId', {
             instance: 'testId',
