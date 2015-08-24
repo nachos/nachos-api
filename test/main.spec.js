@@ -68,12 +68,15 @@ describe('nachos-api', function () {
       expect(currentSocketClientMock.on).to.have.been.calledWith('custom.test', cb);
     });
 
-    it('should emit custom event with \'custom\' ןמא the name and wrapped data', function () {
+    it('should emit custom event with \'custom.\' added to the name and wrapped data', function () {
       var data = {test: 'test'};
 
       nachosApi.emit('test', data);
 
-      expect(currentSocketClientMock.emit).to.have.been.calledWith('custom', {name: 'test', data: data});
+      expect(currentSocketClientMock.emit).to.have.been.calledWith('custom.test', {
+        name: 'test',
+        data: data
+      });
     });
 
     it('should remove listener event with \'custom.\' added to the name', function () {
@@ -218,7 +221,10 @@ describe('nachos-api', function () {
 
       before(function () {
         var nachosConfigMock = {
-          getSync: sinon.stub().returns({port: '1234', token: 'test'})
+          getSync: sinon.stub().returns({
+            port: '1234',
+            token: 'test'
+          })
         };
 
         var serverApiMock = function () {

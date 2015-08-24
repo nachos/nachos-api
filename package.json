@@ -35,21 +35,22 @@
     "gulp-jscs": "^2.0.0",
     "gulp-jshint": "^1.11.2",
     "gulp-mocha": "^2.1.3",
+    "jscs-nachos": "^1.0.1",
     "jshint-stylish": "^2.0.1",
     "lazypipe": "^1.0.1",
     "mockery": "^1.4.0",
     "q": "^1.4.1",
     "run-sequence": "^1.1.2",
-    "sinon": "^1.15.4",
+    "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "api-tailor": "^1.0.1",
+    "api-tailor": "^1.1.0",
     "debug": "^2.2.0",
     "lodash": "^3.10.1",
     "nachos-config": "^1.0.0",
     "nachos-server-api": "^1.0.1",
-    "nachos-settings-file": "^1.0.2",
+    "nachos-settings-file": "^1.0.3",
     "socket.io-client": "^1.3.6"
   }
 }
